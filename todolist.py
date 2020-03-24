@@ -68,10 +68,22 @@ class Afficheur:
 
 
     def afficherListe(self):
-        """ Afficher toutes les taches de la liste """
-        for tache in self.todoListe.getToutesLesTaches():
-            print(tache.afficher())
+        """ Afficher toutes les taches de la liste avec les index :
 
+        1/ [X] Faire du python
+        2/ [ ] Termienr le TP
+        3/ [ ] Commencer l'héritage
+
+        """
+        toutesLesTaches = self.todoListe.getToutesLesTaches()
+        for index in range(len(toutesLesTaches)):
+            print(str(index+1)+"/ "+toutesLesTaches[index].afficher())
+
+        ## Autre façon de faire la même chose :
+        #index = 1
+        #for tache in self.todoListe.getToutesLesTaches():
+        #    print(str(index)+"/ " + tache.afficher())
+        #    index += 1
 
     def demanderChoix(self):
         """ Affiche un menu et demande à l'utilisateur de choisir une action, en gérant les cas d'entrée incorrecte, et renvoie le choix effectuer """
@@ -83,6 +95,7 @@ class Afficheur:
         5) Afficher les tâches faites
         """)
         choix = 0
+        # Boucle tant que le choix est invalide
         while not (1 <= choix <= 5):
             try:
                 choix = int(input("> Entrez votre choix:"))
@@ -101,11 +114,14 @@ class Afficheur:
 
         elif choix == 2:
             # Terminer une tache
+            # Boucler tant que l'index est invalide.
+            # On utilise le fait qu'en cas d'index incorrect, on aura une IndexError
             invalide = True
             while invalide:
                 try:
                     indexTache = int(input("Quelle tâche à supprimer ?"))  # Peut déclencher un ValueError
                     tache = self.todoListe.getTache(indexTache - 1)  # Peut déclencher un IndexError
+                    # Si on arrive ici, l'index est valide
                     tache.terminer()
                     invalide = False
                 except ValueError:
@@ -116,25 +132,30 @@ class Afficheur:
 
         elif choix == 3:
             # Afficher toutes les taches
-            pass
+            for tache in self.todoListe.getToutesLesTaches():
+                print(tache.afficher())
 
         elif choix == 4:
             # Afficher les taches à faire
-            pass
+            for tache in self.todoListe.getTachesAFaire():
+                print(tache.afficher())
+
+
+
 
         elif choix == 5:
             # Afficher les taches faites
-            pass
+            for tache in self.todoListe.getTachesFaites():
+                print(tache.afficher())
 
 
 
 todoList = TODOList()
 afficheur = Afficheur(todoList)
 while True:
+    print("----------")
     afficheur.afficherListe()
     choix = afficheur.demanderChoix()
     afficheur.traiterChoix(choix)
-
-
 
 
